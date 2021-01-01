@@ -4,21 +4,22 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.2",
-    "@materialsproject/mp-react-components": "^0.1.4-SNAPSHOT.1608233645",
+    "@material-ui/icons": "^4.11.2",
+    "@materialsproject/mp-react-components": "^0.1.4",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "fontsource-roboto": "^4.0.0",
     "install": "^0.13.0",
     "npm": "^6.14.10",
-    "react": "^16.0.4",
-    "react-dom": "^16.0.4",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "react-scripts": "4.0.1",
     "react-window": "^1.8.6",
-    "styled-components": "^5.2.1",
     "web-vitals": "^0.2.4"
   },
   "resolutions": {
-    "@materialsproject/mp-react-components/**/react": "^16.0.4"
+    "@materialsproject/mp-react-components/**/react": "^17.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -43,5 +44,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/react-dom": "^17.0.0"
   }
 }
