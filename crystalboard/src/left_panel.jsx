@@ -82,7 +82,7 @@ const LeftPanel = ({ checkedIndex, data, handleUpdate }) => {
                     handleUpdate: updateFunction
                 }}
                 itemCount={data.length}
-                itemSize={52}
+                itemSize={38}
                 height={height - (30 + 17 + 1)}
                 width={drawerWidth}
             >
@@ -94,7 +94,7 @@ const LeftPanel = ({ checkedIndex, data, handleUpdate }) => {
 
 const DataRow = ({ index, data, style }) => {
     const classes = useStyles();
-    const name = `${data.nameList[index]}`;
+    const name = `${data.nameList[index].name}`;
     return (
         <div style={style} key={`trajectory_${index}`}>
             <ListItem 
@@ -122,7 +122,6 @@ const DataRow = ({ index, data, style }) => {
                     primary={
                         name.length > 25 ? name.slice(0, 25) + '...' : name
                     }
-                    secondary={"test"}
                 />
             </ListItem>
         </div>

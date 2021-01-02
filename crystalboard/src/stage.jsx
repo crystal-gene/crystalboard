@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const Stage = ({ crystal_1, crystal_2, metadata}) => {
+const Stage = ({ crystal1, crystal2, metadata }) => {
     const classes = useStyles();
     return (
         <main className={classes.main}>
@@ -49,7 +49,7 @@ const Stage = ({ crystal_1, crystal_2, metadata}) => {
                 <Grid container justify="center" className={classes.gridContainer} spacing={2}>
                     <Grid className={classes.crystalContainer} item xs={5}>
                         <Crystal3D
-                            data={test_data}
+                            data={crystal1}
                         />
                     </Grid>
                     <Grid className={classes.crystalContainer} item xs={1}>
@@ -60,12 +60,12 @@ const Stage = ({ crystal_1, crystal_2, metadata}) => {
                     </Grid>
                     <Grid className={classes.crystalContainer} item xs={5}>
                         <Crystal3D
-                            data={test_data}
+                            data={crystal2}
                         />
                     </Grid>
                 </Grid>
                 <MetadataPanel 
-                    data={test_data_2}
+                    data={metadata}
                 />
             </div>
 
@@ -75,6 +75,7 @@ const Stage = ({ crystal_1, crystal_2, metadata}) => {
 
 const MetadataPanel = ({ data }) => {
     const classes = useStyles();
+    const restoredKeys = ["stepIndex", "summary", "fromInit", "toFinal"];
     return (
         <Card 
             elevation={3}
@@ -84,35 +85,22 @@ const MetadataPanel = ({ data }) => {
         >
             <CardContent>
                 {data.summary ? (
-                    <>
-                        <Typography className={classes.metadataTitle} variant="h5">
-                            Initial state 
-                            <ArrowForwardRoundedIcon style={{verticalAlign: 'middle'}}/> 
-                            Final state (Summary)
-                        </Typography>
-                        <Typography variant="body1">
-                            <b>Total Reward</b>: {data.reward}
-                        </Typography>
-                    </>
+                    <Typography className={classes.metadataTitle} variant="h5">
+                        Initial state 
+                        <ArrowForwardRoundedIcon style={{verticalAlign: 'middle'}}/> 
+                        Final state (Summary)
+                    </Typography>
                 ) : (
-                    <>
-                        <Typography className={classes.metadataTitle}  variant="h5">
-                            {data.fromInit ? `Initial state (${data.stepIndex})` : `state ${data.stepIndex}`}
-                             <ArrowForwardRoundedIcon style={{verticalAlign: 'middle'}}/> 
-                             {data.toFinal ? `final state (${data.stepIndex+data.stepInterval})` : `state ${data.stepIndex+data.stepInterval}`}
-                        </Typography>
-                        <Typography variant="body1">
-                            <b>Step Reward</b>: {data.reward}
-                        </Typography>
-                        <Typography variant="body1">
-                            <b>Current Action</b>: {data.action}
-                        </Typography>
-                    </>
+                    <Typography className={classes.metadataTitle}  variant="h5">
+                        {data.fromInit ? `Initial state (${data.stepIndex})` : `state ${data.stepIndex}`}
+                            <ArrowForwardRoundedIcon style={{verticalAlign: 'middle'}}/> 
+                            {data.toFinal ? `final state (${data.stepIndex+1})` : `state ${data.stepIndex+1}`}
+                    </Typography>
                 )}
                 {
-                    data.otherMetadata.map(({ title, value }) => (
-                        <Typography variant="body1">
-                            <b>{title}</b>: {value}
+                    Object.keys(data).map((key) => restoredKeys.includes(key) ? <></> : (
+                        <Typography key={`metadata_${key}`} variant="body1">
+                            <b>{key}</b>: {`${data[key]}`}
                         </Typography>
                     ))
                 }
@@ -146,6 +134,7 @@ const Crystal3D = ({ data, size=350, options={} }) => {
     )
 }
 
+// eslint-disable-next-line
 const test_data = {name: "StructureMoleculeComponentScene",
     contents: [{name: "atoms_Na_1a",
         contents: [{positions: [[4.2, 4.2, 0.0],
@@ -165,6 +154,7 @@ const test_data = {name: "StructureMoleculeComponentScene",
         visible: true}]
 }
 
+// eslint-disable-next-line
 const test_data_2 = {
     action: 'Modify Na at site 1 (0.0, 0.0, 0.0) to Mg',
     reward: -0.3,

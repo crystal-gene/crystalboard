@@ -4,6 +4,7 @@ import Drawer from '@material-ui/core/Drawer';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import Tooltip from '@material-ui/core/Tooltip';
 import { FixedSizeGrid as GridList } from 'react-window';
 import { useWindowDimensions } from './utils'
 
@@ -68,7 +69,6 @@ const RightPanel = ({ currentStepIndex, steps, handleUpdate }) => {
         handleUpdate("step", stepIndex)
     }
     const { height } = useWindowDimensions();
-
     return (
         <Drawer
             variant="permanent"
@@ -88,7 +88,7 @@ const RightPanel = ({ currentStepIndex, steps, handleUpdate }) => {
                 <StepButton 
                     className={classes.summaryButton}
                     summary={{
-                        index: steps.length,
+                        index: steps.structures.length-1,
                         step: "summary",
                         currentStepIndex: currentStepIndex,
                         handleUpdate: updateFunction
@@ -100,14 +100,14 @@ const RightPanel = ({ currentStepIndex, steps, handleUpdate }) => {
                 <GridList 
                     className={classes.buttonList}
                     itemData={{
-                        steps: steps,
+                        steps: steps.structures.length - 1,
                         currentStepIndex: currentStepIndex,
                         handleUpdate: updateFunction
                     }}
                     columnCount={gridCol}
                     columnWidth={70}
                     width={drawerWidth-10}
-                    rowCount={Math.ceil(steps.length / gridCol)}
+                    rowCount={Math.ceil(steps.structures.length / gridCol)}
                     rowHeight={40}
                     height={height - (35 + 20 + 1 + 4)}
                 >
@@ -128,7 +128,7 @@ const StepButton = ({ columnIndex, rowIndex, style, data, summary=null }) => {
         currentStepIndex = summary.currentStepIndex;
     } else {
         index = rowIndex * gridCol + columnIndex;
-        step = index >= data.steps.length ? null : `${data.steps[index]}`;
+        step = index >= data.steps ? null : `${index+1}`;
         handleUpdate = data.handleUpdate;
         currentStepIndex = data.currentStepIndex
     }
@@ -136,19 +136,20 @@ const StepButton = ({ columnIndex, rowIndex, style, data, summary=null }) => {
     return (
         step === null ? <></> : (
             <div key={`step_${index}`} style={style}>
-                <Button
-                    className={summary === null ? classes.button : classes.summaryButton}
-                    key={step}
-                    variant={currentStepIndex === index ? "contained" : "outlined"}
-                    color={currentStepIndex === index ? (
-                        summary === null ? "primary" : "secondary"
-                    ) : (
-                        summary === null ? "default" : "secondary"
-                    )}
-                    onClick={() => {handleUpdate(index)}}
-                >
-                    {step}
-                </Button>
+                <Tooltip  title={summary === null ? `State ${index} → State ${index+1}` : ' Summary of the trajectory'} placement="bottom">
+                    <Button
+                        className={summary === null ? classes.button : classes.summaryButton}
+                        variant={currentStepIndex === index ? "contained" : "outlined"}
+                        color={currentStepIndex === index ? (
+                            summary === null ? "primary" : "secondary"
+                        ) : (
+                            summary === null ? "default" : "secondary"
+                        )}
+                        onClick={() => {handleUpdate(index)}}
+                    >
+                        {step}
+                    </Button>
+                </Tooltip>
             </div>
         )
     )

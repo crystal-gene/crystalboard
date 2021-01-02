@@ -31,11 +31,12 @@ export async function getTracList(url) {
 }
 
 export async function getStepFile(url, tracName) {
-    const tracList = await fetch(url);
+    const tracList = await fetch(url + "?" + new URLSearchParams({
+        name: tracName
+    }));
     const tracJson = await tracList.json()
     return tracJson;
 }
-
 
 const useStyles = makeStyles((theme) => ({
     redText: {

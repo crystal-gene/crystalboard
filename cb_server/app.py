@@ -1,10 +1,12 @@
-from flask import Flask
+from flask import Flask, request
+from flask import abort
 import flask
 from pymongo import MongoClient
 from pymatgen.core import Structure
 import crystal_toolkit.components as ctc
 import json
 import numpy as np
+import os
 
 
 class NumpyEncoder(json.JSONEncoder):
@@ -39,6 +41,44 @@ def sample_structure():
 def sample():
     resp = flask.Response(
         json.dumps(sample_structure(), cls=NumpyEncoder)
+    )
+    resp.headers["Content-Type"] = "application/json"
+    return resp
+
+
+@app.route("/list", methods=["POST", "GET"])
+def get_trac_list():
+    file_list = os.listdir("static")
+    resp_obj = [{
+        "name": file.rstrip(".json"),
+        "reward": 0
+    } for file in file_list]
+    resp = flask.Response(
+        json.dumps(resp_obj)
+    )
+    resp.headers["Content-Type"] = "application/json"
+    return resp
+
+
+@app.route("/step", methods=["POST", "GET"])
+def get_step_content():
+    trac_name = request.args.get("name", None)
+    if trac_name is None or not os.path.exists(
+            os.path.join("static", trac_name+".json")
+    ):
+        abort(404)
+    with open(os.path.join("static", trac_name+".json"), "r", encoding="utf-8") as f:
+        step_file = json.load(f)
+
+    resp = flask.Response(
+        json.dumps({
+            "step_metadata": [{"Action": "unknown", "Step Reward": 1.} for _ in range(len(step_file)-1)],
+            "structures": step_file,
+            "summary": {
+                "Total Reward": 0,
+                "Step Length": len(step_file) - 1
+            }
+        })
     )
     resp.headers["Content-Type"] = "application/json"
     return resp
