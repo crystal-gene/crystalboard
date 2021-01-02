@@ -24,6 +24,18 @@ export function useWindowDimensions() {
     return windowDimensions;
 }
 
+export async function getTracList(url) {
+    const tracList = await fetch(url);
+    const tracJson = await tracList.json()
+    return tracJson;
+}
+
+export async function getStepFile(url, tracName) {
+    const tracList = await fetch(url);
+    const tracJson = await tracList.json()
+    return tracJson;
+}
+
 
 const useStyles = makeStyles((theme) => ({
     redText: {

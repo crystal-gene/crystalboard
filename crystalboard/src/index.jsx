@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import 'fontsource-roboto/400.css';
 
 import LeftPanel from './left_panel';
 import Stage from './stage';
-import RightPanel from './right_panel'
+import RightPanel from './right_panel';
+import { getTracList, getStepFile } from './utils';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -13,12 +14,19 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+
+const urls = {
+    tracList: '/list',
+    stepFile: '/step'
+}
+
 function App() {
     const classes = useStyles();
 
-    const names = [...Array(500).keys()];
-    const tmp = [...Array(500).keys()];
-    const names2 = tmp.map((t) => `${t}`)
+    let tracList = useRef(getTracList(urls.tracList));
+    if (tracList.length > 0) {
+        let stepFile = useRef(getStepFile(urls.stepFile, tracList[0]))
+    }
     const [ currentIndex, setIndex ] = useState(0);
     const [ currentStepIndex, setStepIndex ] = useState(names2.length)
     const handleUpdate = (action, value) => {
@@ -30,13 +38,13 @@ function App() {
                 setStepIndex(value);
                 break;
             default:
-                throw new Error();
+                throw new Error(`Unexpected action type: ${action}`);
         }
     }
     return (
         <div className={classes.root}>
             <LeftPanel 
-                data={names} 
+                data={tracList} 
                 checkedIndex={currentIndex}
                 handleUpdate={handleUpdate}
             />

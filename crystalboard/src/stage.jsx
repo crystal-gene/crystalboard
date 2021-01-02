@@ -109,6 +109,13 @@ const MetadataPanel = ({ data }) => {
                         </Typography>
                     </>
                 )}
+                {
+                    data.otherMetadata.map(({ title, value }) => (
+                        <Typography variant="body1">
+                            <b>{title}</b>: {value}
+                        </Typography>
+                    ))
+                }
             </CardContent>
         </Card>
     )
@@ -165,7 +172,8 @@ const test_data_2 = {
     stepIndex: 3,
     fromInit: true,
     toFinal: false,
-    stepInterval: 1
+    stepInterval: 1,
+    otherMetadata: []
 }
 
 export default Stage;
