@@ -1,8 +1,8 @@
 from tensorboard.plugins import base_plugin
+from tensorboard.backend.http_util import Respond
 from metadata import PLUGIN_NAME, FRONTEND_FILE
 import json
 import os
-import werkzeug
 from werkzeug import wrappers
 import re
 from functools import partial
@@ -39,11 +39,11 @@ class CrystalPlugin(base_plugin.TBPlugin):
 
     def frontend_metadata(self):
         return base_plugin.FrontendMetadata(
-            es_module_path="/index.js", tab_name="Crystal"
+            es_module_path="/index.js", tab_name="Crystal", disable_reload=True,
         )
 
     @wrappers.Request.application
-    def _serve_file(self, path):
+    def _serve_file(self, path, request):
         has_suffix = lambda suffix, pattern: \
             re.match(rf".+\.{re.escape(suffix)}$", path) is not None
 
@@ -57,14 +57,22 @@ class CrystalPlugin(base_plugin.TBPlugin):
             content_type = "text/html"
         else:
             content_type = None
-        return self.make_response(path, content_type=content_type)
+        return self.make_response(request, path, content_type=content_type)
 
     @staticmethod
-    def make_response(path, content_type=None):
+    def make_response(request, path, content_type=None):
         filepath = os.path.join(get_abs_path(FRONTEND_FILE, path))
         with open(filepath) as f:
             contents = f.read()
-        return werkzeug.Response(contents, content_type=content_type)
+        return Respond(request, contents, content_type=content_type)
 
     def is_active(self):
         return bool(self._multiplexer.PluginRunToTagToContent(PLUGIN_NAME))
+
+    @wrappers.Request.application
+    def _serve_run_list(self, request):
+        run = request.args.get("run")
+        if run is None:
+            return Respond(request, 'query parameter "run" is required', 'text/plain',
+                           400)
+        return Respond(request, self._multiplexer.)
