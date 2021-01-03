@@ -1,10 +1,12 @@
-from torch.utils.tensorboard import SummaryWriter
-import numpy as np
+from crystal_summary import CrystalSummaryWriter
+import pymongo
+from pymatgen.core import Structure
 
-writer = SummaryWriter()
+db = pymongo.MongoClient()["material_dataset"]
+collection = db["materials_project"]
 
-for n_iter in range(100):
-    writer.add_scalar('Loss/train', np.random.random(), n_iter)
-    writer.add_scalar('Loss/test', np.random.random(), n_iter)
-    writer.add_scalar('Accuracy/train', np.random.random(), n_iter)
-    writer.add_scalar('Accuracy/test', np.random.random(), n_iter)
+writer = CrystalSummaryWriter()
+
+for s in collection.aggregate([{"$sample": {"size": 100}}]):
+    structure = Structure.from_dict(s["structure"])
+    writer.add_crystal("0", structure, info={})
