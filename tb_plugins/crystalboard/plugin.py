@@ -30,10 +30,12 @@ class CrystalPlugin(base_plugin.TBPlugin):
         root_dir = get_abs_path(FRONTEND_FILE)
         for (root, dirs, files) in os.walk(root_dir):
             root = root.lstrip(root_dir)
-            route_root = root.replace(os.pathsep, "/")
+            route_root = root.replace(os.path.sep, "/")
             for file in files:
                 path = os.path.join(root, file)
-                apps_list[] = partial(self._serve_file, path=)
+                apps_list[route_root + "/" + file] = partial(self._serve_file, path=os.path.join(root, path))
+
+        return apps_list
 
     def frontend_metadata(self):
         return base_plugin.FrontendMetadata(
@@ -43,7 +45,7 @@ class CrystalPlugin(base_plugin.TBPlugin):
     @wrappers.Request.application
     def _serve_file(self, path):
         has_suffix = lambda suffix, pattern: \
-            re.match(rf".+\.{re.escape(suffix)}", path) is not None
+            re.match(rf".+\.{re.escape(suffix)}$", path) is not None
 
         if has_suffix("json", path):
             content_type = "application/json"
