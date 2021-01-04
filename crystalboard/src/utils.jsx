@@ -30,12 +30,21 @@ export async function getTracList(url) {
     return tracJson;
 }
 
-export async function getStepFile(url, tracName) {
-    const tracList = await fetch(url + "?" + new URLSearchParams({
-        name: tracName
+export async function getStepFile(stepUrl, metadataUrl, run, tag) {
+    const tracList = await fetch(stepUrl + "?" + new URLSearchParams({
+        run: run,
+        tag: tag
     }));
-    const tracJson = await tracList.json()
-    return tracJson;
+    const tracJson = await tracList.json();
+    const metadataList = await fetch(metadataUrl + "?" + new URLSearchParams({
+        run: run,
+        tag: tag
+    }));
+    const metadataJson = await metadataList.json();
+    return {
+        structures: tracJson,
+        stepMetadata: metadataJson
+    };
 }
 
 const useStyles = makeStyles((theme) => ({

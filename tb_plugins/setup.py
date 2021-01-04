@@ -15,7 +15,7 @@ setuptools.setup(
     },
     entry_points={
         "tensorboard_plugins": [
-            "example = crystalboard.plugin:CrystalPlugin",
+            "example = crystalboard.crystal_plugin:CrystalPlugin",
         ],
     },
 )

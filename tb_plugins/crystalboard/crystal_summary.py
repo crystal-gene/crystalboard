@@ -6,7 +6,8 @@ from tensorboard.compat.proto.tensor_pb2 import TensorProto
 from tensorboard.compat.proto.tensor_shape_pb2 import TensorShapeProto
 import crystal_toolkit.components as ctc
 import numpy as np
-from metadata import PLUGIN_NAME
+from .crystal_metadata import PLUGIN_NAME, META_TAG
+from typing import Optional
 
 
 class NumpyEncoder(json.JSONEncoder):
@@ -38,11 +39,8 @@ def _create_summary_metadata(description):
     )
 
 
-def crystal(tag, structure_layout, info, description=None):
-    obj_to_write = {
-        "structure": structure_layout,
-        "info": info
-    }
+def crystal(tag, structure_layout_or_meta, description=None):
+    obj_to_write = structure_layout_or_meta
     stringfy_obj = json.dumps(obj_to_write, cls=NumpyEncoder)
     metadata = _create_summary_metadata(description=description)
     tensor = TensorProto(dtype='DT_STRING',
@@ -54,9 +52,9 @@ def crystal(tag, structure_layout, info, description=None):
 class CrystalSummaryWriter(SummaryWriter):
     def add_crystal(
             self,
-            tag,
-            structure: Structure,
-            info,
+            tag: str,
+            structure: Optional[Structure],
+            info: Optional[dict] = None,
             global_step=None,
             walltime=None
     ):
@@ -70,6 +68,12 @@ class CrystalSummaryWriter(SummaryWriter):
             walltime (float): Optional override default walltime (time.time())
               seconds after epoch of event
         """
-        self._get_file_writer().add_summary(
-            crystal(tag, get_layout(structure), info), global_step, walltime
-        )
+        if structure is not None:
+            self._get_file_writer().add_summary(
+                crystal(tag, get_layout(structure)), global_step, walltime
+            )
+        if info is not None:
+            meta_tag = tag + META_TAG
+            self._get_file_writer().add_summary(
+                crystal(meta_tag, info), global_step, walltime
+            )

@@ -14,11 +14,13 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+const BASE_URL = '/data/plugin/crystal';
 
 const urls = {
-    tracList: 'http://localhost:5000/list',
-    stepFile: 'http://localhost:5000/step'
-}
+    tracList: BASE_URL + '/tags',
+    stepFile: BASE_URL + '/step',
+    stepMetadata: BASE_URL + '/metadata'
+};
 
 function App() {
     const classes = useStyles();
@@ -26,9 +28,8 @@ function App() {
     let isLoad = useRef(false);
     const [ tracList, setTracList ] = useState([]);
     const [ stepFile, setStepFile ] = useState({
-        summary: {},
         structures: [],
-        step_metadata: []
+        stepMetadata: []
     });
     const [ crystal1, setCrystal1 ] = useState({});
     const [ crystal2, setCrystal2 ] = useState({});
@@ -52,7 +53,7 @@ function App() {
                         fromInit: true,
                         toFinal: true,
                         stepIndex: value,
-                        ...stepFile.summary
+                        ...stepFile.stepMetadata[value]
                     })
                 } else {
                     setCrystal1(stepFile.structures[value]);
@@ -60,9 +61,9 @@ function App() {
                     setMetadata({
                         summary: false,
                         fromInit: value === 0,
-                        toFinal: value === stepFile.structures.length - 1,
+                        toFinal: value === stepFile.structures.length - 2,
                         stepIndex: value,
-                        ...stepFile.step_metadata[value]
+                        ...stepFile.stepMetadata[value]
                     })
                 }
                 break;
@@ -87,7 +88,7 @@ function App() {
         const fetchStep = async () => {
             if (tracList && tracList.length > currentIndex) {
                 setStepFile(
-                    await getStepFile(urls.stepFile, tracList[currentIndex].name)
+                    await getStepFile(urls.stepFile, urls.stepMetadata, tracList[currentIndex].run, tracList[currentIndex].tag)
                 );
             }
         }

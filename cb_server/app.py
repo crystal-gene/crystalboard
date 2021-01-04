@@ -46,12 +46,12 @@ def sample():
     return resp
 
 
-@app.route("/list", methods=["POST", "GET"])
+@app.route("/tags", methods=["POST", "GET"])
 def get_trac_list():
     file_list = os.listdir("static")
     resp_obj = [{
-        "name": file.rstrip(".json"),
-        "reward": 0
+        "tag": file.rstrip(".json"),
+        "run": "run1"
     } for file in file_list]
     resp = flask.Response(
         json.dumps(resp_obj)
@@ -62,7 +62,22 @@ def get_trac_list():
 
 @app.route("/step", methods=["POST", "GET"])
 def get_step_content():
-    trac_name = request.args.get("name", None)
+    trac_name = request.args.get("tag", None)
+    if trac_name is None or not os.path.exists(
+            os.path.join("static", trac_name+".json")
+    ):
+        abort(404)
+    with open(os.path.join("static", trac_name+".json"), "r", encoding="utf-8") as f:
+        step_file = f.read()
+
+    resp = flask.Response(step_file)
+    resp.headers["Content-Type"] = "application/json"
+    return resp
+
+
+@app.route("/metadata", methods=["POST", "GET"])
+def get_step_metadata():
+    trac_name = request.args.get("tag", None)
     if trac_name is None or not os.path.exists(
             os.path.join("static", trac_name+".json")
     ):
@@ -71,14 +86,8 @@ def get_step_content():
         step_file = json.load(f)
 
     resp = flask.Response(
-        json.dumps({
-            "step_metadata": [{"Action": "unknown", "Step Reward": 1.} for _ in range(len(step_file)-1)],
-            "structures": step_file,
-            "summary": {
-                "Total Reward": 0,
-                "Step Length": len(step_file) - 1
-            }
-        })
+        json.dumps([{"Action": "unknown", "Step Reward": 1.} for _ in range(len(step_file)-1)] +
+                   [{"Reward": 0.0, "Step Length": len(step_file) - 1}])
     )
     resp.headers["Content-Type"] = "application/json"
     return resp

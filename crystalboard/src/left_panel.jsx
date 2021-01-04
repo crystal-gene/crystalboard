@@ -82,7 +82,7 @@ const LeftPanel = ({ checkedIndex, data, handleUpdate }) => {
                     handleUpdate: updateFunction
                 }}
                 itemCount={data.length}
-                itemSize={38}
+                itemSize={52}
                 height={height - (30 + 17 + 1)}
                 width={drawerWidth}
             >
@@ -94,7 +94,9 @@ const LeftPanel = ({ checkedIndex, data, handleUpdate }) => {
 
 const DataRow = ({ index, data, style }) => {
     const classes = useStyles();
-    const name = `${data.nameList[index].name}`;
+    const tag = `${data.nameList[index].tag}`;
+    const run = `${data.nameList[index].run}`;
+
     return (
         <div style={style} key={`trajectory_${index}`}>
             <ListItem 
@@ -114,13 +116,16 @@ const DataRow = ({ index, data, style }) => {
                     <Radio
                         checked={data.checkedIndex === index}
                         value={`${index}`}
-                        name={name}
+                        name={tag}
                         size="small"
                     />
                 </ListItemIcon>
                 <ListItemText 
                     primary={
-                        name.length > 25 ? name.slice(0, 25) + '...' : name
+                        tag.length > 25 ? tag.slice(0, 25) + '...' : tag
+                    }
+                    secondary={
+                        run.length > 25 ? run.slice(0, 25) + '...' : run
                     }
                 />
             </ListItem>

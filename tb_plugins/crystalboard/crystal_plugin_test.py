@@ -1,4 +1,4 @@
-from summary import CrystalSummaryWriter
+from .crystal_summary import CrystalSummaryWriter
 import pymongo
 from pymatgen.core import Structure
 

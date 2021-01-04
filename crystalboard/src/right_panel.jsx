@@ -107,7 +107,7 @@ const RightPanel = ({ currentStepIndex, steps, handleUpdate }) => {
                     columnCount={gridCol}
                     columnWidth={70}
                     width={drawerWidth-10}
-                    rowCount={Math.ceil(steps.structures.length / gridCol)}
+                    rowCount={Math.ceil((steps.structures.length - 1) / gridCol)}
                     rowHeight={40}
                     height={height - (35 + 20 + 1 + 4)}
                 >

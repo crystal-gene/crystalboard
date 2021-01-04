@@ -21,6 +21,7 @@
   "resolutions": {
     "@materialsproject/mp-react-components/**/react": "^17.0.1"
   },
+  "homepage": "/data/plugin/crystal/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
