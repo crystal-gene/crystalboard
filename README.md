@@ -2,7 +2,7 @@
 CrystalBoard is a plugin that can be used to visualize crystal structures.
 
 
-## Show Case
+## Demo
 ![crystalboard.png](docs/crystalboard.png)
 
 ## Installation
