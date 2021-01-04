@@ -5,7 +5,6 @@ import os
 from werkzeug import wrappers
 import re
 from tensorboard.backend.event_processing.plugin_event_multiplexer import EventMultiplexer
-from pprint import pprint
 
 
 def get_abs_path(*rel_path):

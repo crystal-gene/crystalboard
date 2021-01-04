@@ -8,6 +8,8 @@ node_modules/
 .idea/
 __pycache__/
 
+*.egg-info/
+
 # testing
 /coverage
 
@@ -15,10 +17,9 @@ __pycache__/
 build/
 runs/
 
-# production
-build/
 
 yarn.lock
+.eslintcache
 
 # misc
 .DS_Store

@@ -1,4 +1,4 @@
-from .crystal_summary import CrystalSummaryWriter
+from crystalboard import CrystalSummaryWriter
 import pymongo
 from pymatgen.core import Structure
 
@@ -9,4 +9,4 @@ writer = CrystalSummaryWriter()
 
 for s in collection.aggregate([{"$sample": {"size": 100}}]):
     structure = Structure.from_dict(s["structure"])
-    writer.add_crystal("0", structure, info={})
+    writer.add_crystal("1", structure, info={})
