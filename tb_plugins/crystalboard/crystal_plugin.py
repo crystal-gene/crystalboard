@@ -5,6 +5,8 @@ import os
 from werkzeug import wrappers
 import re
 from tensorboard.backend.event_processing.plugin_event_multiplexer import EventMultiplexer
+from tensorboard.data.provider import DataProvider
+from tensorboard.backend.event_processing import tag_types
 
 
 def get_abs_path(*rel_path):
@@ -20,9 +22,15 @@ def add_prefix_to_path(prefix, path):
 class CrystalPlugin(base_plugin.TBPlugin):
     plugin_name = PLUGIN_NAME
 
-    def __init__(self, context):
+    def __init__(self, context: base_plugin.TBContext):
         super(CrystalPlugin, self).__init__(context)
         self._multiplexer: EventMultiplexer = context.multiplexer
+        self._multiplexer._size_guidance = {
+            tag_types.TENSORS: 500,
+        }  # stupid, right?
+        self._multiplexer._reload_called = False
+        self._multiplexer.Reload()
+        self._data_provider: DataProvider = context.data_provider
 
     def get_plugin_apps(self):
         apps_list = {}
@@ -84,7 +92,7 @@ class CrystalPlugin(base_plugin.TBPlugin):
             elif has_suffix("html"):
                 content_type = "text/html"
             elif has_suffix("woff2"):
-                content_type = "application/font-woff2"
+                content_type = "font/woff2"
             else:
                 content_type = "text/plain"
             return make_response(request, content_type=content_type)
@@ -135,7 +143,7 @@ class CrystalPlugin(base_plugin.TBPlugin):
         if tag is None:
             return Respond(request, 'query parameter "tag" is required', 'text/plain',
                            400)
-        resp = self._multiplexer.Tensors(run, tag + META_TAG)
+        resp = self._multiplexer.Tensors(run, tag+META_TAG)
 
         resp = [r_out[2].string_val[0].decode("utf-8") for r_out in resp]
 

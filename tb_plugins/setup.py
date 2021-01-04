@@ -13,6 +13,7 @@ setuptools.setup(
     package_data={
         "crystalboard": ["build/**"],
     },
+    install_requires=['werkzeug', 'tensorboard', 'numpy', "crystal-toolkit"],
     entry_points={
         "tensorboard_plugins": [
             "example = crystalboard.crystal_plugin:CrystalPlugin",
