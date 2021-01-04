@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.js": "/data/plugin/crystal/static/js/main.1004d281.chunk.js",
+    "main.js.map": "/data/plugin/crystal/static/js/main.1004d281.chunk.js.map",
+    "runtime-main.js": "/data/plugin/crystal/static/js/runtime-main.35f52e1c.js",
+    "runtime-main.js.map": "/data/plugin/crystal/static/js/runtime-main.35f52e1c.js.map",
+    "static/css/2.b1eda571.chunk.css": "/data/plugin/crystal/static/css/2.b1eda571.chunk.css",
+    "static/js/2.98cdc7c8.chunk.js": "/data/plugin/crystal/static/js/2.98cdc7c8.chunk.js",
+    "static/js/2.98cdc7c8.chunk.js.map": "/data/plugin/crystal/static/js/2.98cdc7c8.chunk.js.map",
+    "index.html": "/data/plugin/crystal/index.html",
+    "static/css/2.b1eda571.chunk.css.map": "/data/plugin/crystal/static/css/2.b1eda571.chunk.css.map",
+    "static/js/2.98cdc7c8.chunk.js.LICENSE.txt": "/data/plugin/crystal/static/js/2.98cdc7c8.chunk.js.LICENSE.txt",
+    "static/media/400.css": "/data/plugin/crystal/static/media/roboto-vietnamese-400-normal.52cebac0.woff2"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.35f52e1c.js",
+    "static/css/2.b1eda571.chunk.css",
+    "static/js/2.98cdc7c8.chunk.js",
+    "static/js/main.1004d281.chunk.js"
+  ]
+}
